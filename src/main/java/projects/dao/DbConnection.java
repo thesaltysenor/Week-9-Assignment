@@ -7,16 +7,19 @@ import projects.exception.DbException;
 import javax.swing.*;
 
 public class DbConnection {
+    // Constants for database connection details
     private static String HOST = "localhost";
     private static String PASSWORD = "projects";
     private static int PORT = 3306;
     private static String SCHEMA = "projects";
     private static String USER = "projects";
 
+    // Get a connection to the database
     public static Connection getConnection() {
         String uri = String.format("jdbc:mysql://%s:%d/%s?user=%s&password=%s", HOST, PORT, SCHEMA, USER, PASSWORD);
 
         try{
+            // Use the DriverManager class to get a connection to the database
             Connection conn = DriverManager.getConnection(uri);
             System.out.println("Connection to schema " + SCHEMA + " is successful.");
             return conn;

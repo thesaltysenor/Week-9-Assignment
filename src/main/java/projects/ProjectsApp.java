@@ -12,11 +12,16 @@ import java.util.Scanner;
 
 public class ProjectsApp  {
     // @formatter:off
+    // List of available operations
     private List<String> operations = List.of(
             "1) Add a project"
     );
     // @formatter:on
+
+    // Scanner object for reading user input
     private Scanner scanner = new Scanner(System.in);
+
+    // ProjectService object for accessing the project database
     private ProjectService projectService = new ProjectService();
 
     public static void main(String[] args) {
@@ -26,40 +31,47 @@ public class ProjectsApp  {
         boolean done = false;
         while (!done) {
             try {
+                // Get user selection
                 int selection = getUserSelection();
 
+                // Perform selected operation
                 switch (selection) {
                     case -1:
-                        done = exitMenu();
+                        done = exitMenu(); // Exit the menu
                         break;
 
                     case 1:
-                        createProject();
+                        createProject(); // Add a new project
                         break;
 
                     default:
+                        // Invalid selection
                         System.out.println("\n" + selection + " is not a valid selection. Try again.");
                 }
 
             }
             catch (Exception e) {
+                // Print error message and try again
                 System.out.println("\nError: " + e + " Try again.");
             }
         }
     }
 
     private boolean exitMenu() {
+        // Print message and exit the menu loop
         System.out.println("\nExiting the menu.");
         return false;
     }
 
     private void createProject() {
+        // Prompt the user for project details
         String projectName = getStringInput("Enter the project name");
         BigDecimal estimatedHours = getDecimalInput("Enter the estimated hours");
         BigDecimal actualHours = getDecimalInput("Enter the actual hours");
         Integer difficulty = getIntInput("Enter the project difficulty (1-5)");
         String notes = getStringInput("Enter the project notes");
 
+        // Create a new Project object and set its properties
         Project project = new Project();
 
      project.setProjectName(projectName);
@@ -68,12 +80,14 @@ public class ProjectsApp  {
      project.setDifficulty(difficulty);
      project.setNotes(notes);
 
+     // Add the project to the database
      Project dbProject = projectService.addProject(project);
 
      System.out.println("Project created successfully: " + dbProject);
     }
 
     private BigDecimal getDecimalInput(String prompt) {
+        // Prompt the user for a decimal value and convert it to a BigDecimal
         String input = getStringInput(prompt);
 
         if (Objects.isNull(input)) {
@@ -83,11 +97,13 @@ public class ProjectsApp  {
             return new BigDecimal(input).setScale(2);
         }
         catch(NumberFormatException e) {
+            // Throw an exception if the input is not a valid decimal value
             throw new DbException(input + " is not a valid decimal number.");
         }
     }
 
     private int getUserSelection() {
+        // Display the available operations and get user selection
         printOperations();
 
         Integer input = getIntInput("Enter a menu selection");
@@ -96,6 +112,7 @@ public class ProjectsApp  {
     }
 
     private Integer getIntInput(String prompt) {
+        // Prompt the user for an integer value and convert it to an Integer
         String input = getStringInput(prompt);
 
         if (Objects.isNull(input)) {
@@ -106,6 +123,7 @@ public class ProjectsApp  {
             return Integer.valueOf(input);
         }
         catch(NumberFormatException e) {
+            // Throw an exception if the input is not a valid integer value
             throw new DbException(input + " is not valid number.");
         }
     }
